@@ -1,0 +1,303 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Seis años contigo ♥</title>
+<link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@600;700&family=Quicksand:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --rosa:#ff5d8f; --rosa-claro:#ffd1e0; --vino:#7a1f45; --crema:#fff6f8; --oscuro:#2b0f1e;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  html{scroll-behavior:smooth}
+  body{
+    font-family:'Quicksand',sans-serif;color:var(--oscuro);
+    background:linear-gradient(180deg,#fff0f5 0%,#ffe0ea 50%,#ffd1e0 100%);
+    overflow-x:hidden;
+  }
+  #hearts{position:fixed;inset:0;pointer-events:none;z-index:0}
+  section{position:relative;z-index:1;padding:90px 20px;max-width:900px;margin:0 auto;text-align:center}
+  h1,h2{font-family:'Dancing Script',cursive;color:var(--vino)}
+  h1{font-size:clamp(3rem,10vw,6rem);line-height:1.1}
+  h2{font-size:clamp(2.2rem,6vw,3.5rem);margin-bottom:40px}
+  .reveal{opacity:0;transform:translateY(40px);transition:all .9s ease}
+  .reveal.visible{opacity:1;transform:none}
+
+  /* HERO */
+  #hero{min-height:100vh;display:flex;flex-direction:column;justify-content:center;align-items:center}
+  #hero .sub{font-size:1.2rem;margin:20px 0 40px;color:var(--vino);opacity:.85}
+  .big-heart{font-size:4rem;animation:latido 1.2s infinite;display:inline-block}
+  @keyframes latido{0%,100%{transform:scale(1)}15%{transform:scale(1.25)}30%{transform:scale(1)}45%{transform:scale(1.2)}}
+  .scroll-hint{margin-top:50px;font-size:.95rem;opacity:.7;animation:flota 2s infinite}
+  @keyframes flota{50%{transform:translateY(10px)}}
+
+  /* CONTADOR */
+  .contador{display:grid;grid-template-columns:repeat(auto-fit,minmax(110px,1fr));gap:16px}
+  .caja{background:rgba(255,255,255,.75);backdrop-filter:blur(6px);border-radius:20px;padding:22px 10px;box-shadow:0 8px 25px rgba(255,93,143,.25)}
+  .caja b{display:block;font-size:2.4rem;color:var(--rosa)}
+  .caja span{font-size:.9rem;text-transform:uppercase;letter-spacing:1px}
+
+  /* LINEA DE TIEMPO */
+  .timeline{position:relative;text-align:left;padding-left:30px;border-left:3px dashed var(--rosa)}
+  .hito{position:relative;background:rgba(255,255,255,.8);padding:20px 24px;border-radius:18px;margin-bottom:28px;box-shadow:0 6px 20px rgba(122,31,69,.12)}
+  .hito::before{content:"♥";position:absolute;left:-47px;top:18px;background:var(--rosa);color:#fff;width:30px;height:30px;border-radius:50%;display:grid;place-items:center;font-size:.9rem}
+  .hito h3{color:var(--rosa);margin-bottom:6px}
+
+  /* RAZONES */
+  .razones{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:20px}
+  .carta{perspective:900px;height:170px;cursor:pointer}
+  .carta-inner{position:relative;width:100%;height:100%;transition:transform .7s;transform-style:preserve-3d}
+  .carta.volteada .carta-inner{transform:rotateY(180deg)}
+  .cara{position:absolute;inset:0;backface-visibility:hidden;border-radius:20px;display:flex;align-items:center;justify-content:center;padding:20px;box-shadow:0 8px 22px rgba(122,31,69,.2)}
+  .frente{background:linear-gradient(135deg,var(--rosa),#ff8fb0);color:#fff;font-family:'Dancing Script',cursive;font-size:2.2rem}
+  .atras{background:#fff;transform:rotateY(180deg);font-size:1.05rem;color:var(--vino)}
+
+  /* CARTA */
+  .papel{background:#fffdf8;border-radius:12px;padding:40px 30px;text-align:left;line-height:1.9;font-size:1.1rem;box-shadow:0 10px 35px rgba(122,31,69,.2);min-height:260px;white-space:pre-wrap}
+  .firma{font-family:'Dancing Script',cursive;font-size:2rem;color:var(--rosa);margin-top:20px;text-align:right}
+
+  /* SORPRESA */
+  button{font-family:inherit;border:none;cursor:pointer;border-radius:50px;padding:16px 38px;font-size:1.15rem;font-weight:600;color:#fff;background:linear-gradient(135deg,var(--rosa),#ff2d6f);box-shadow:0 8px 22px rgba(255,45,111,.4);transition:transform .2s}
+  button:hover{transform:scale(1.07)}
+  #final{display:none;margin-top:40px}
+  #final p{font-size:1.4rem;margin-bottom:25px;color:var(--vino)}
+  .botones{display:flex;gap:20px;justify-content:center;flex-wrap:wrap;position:relative;min-height:70px}
+  #no{background:#b8a0aa;box-shadow:none}
+  #respuesta{display:none;font-family:'Dancing Script',cursive;font-size:clamp(2rem,6vw,3.2rem);color:var(--rosa);margin-top:30px}
+
+  #musica{position:fixed;bottom:18px;right:18px;z-index:5;padding:12px 16px;font-size:1.3rem;display:none}
+  footer{position:relative;z-index:1;text-align:center;padding:30px;opacity:.7}
+</style>
+</head>
+<body>
+
+<canvas id="hearts"></canvas>
+<button id="musica" title="Música">🎵</button>
+
+<section id="hero">
+  <div class="big-heart">💖</div>
+  <h1 class="reveal" id="titulo"></h1>
+  <p class="sub reveal" id="subtitulo"></p>
+  <div class="scroll-hint">Desliza hacia abajo ↓</div>
+</section>
+
+<section>
+  <h2 class="reveal">Nuestro tiempo juntos</h2>
+  <div class="contador reveal" id="contador"></div>
+</section>
+
+<section>
+  <h2 class="reveal">Nuestra historia</h2>
+  <div class="timeline" id="timeline"></div>
+</section>
+
+<section>
+  <h2 class="reveal">6 razones por las que te amo</h2>
+  <p class="reveal" style="margin-bottom:25px">Toca cada corazón para descubrirlas 💌</p>
+  <div class="razones" id="razones"></div>
+</section>
+
+<section>
+  <h2 class="reveal">Una carta para ti</h2>
+  <div class="papel reveal" id="carta"></div>
+  <div class="firma reveal" id="firma"></div>
+</section>
+
+<section>
+  <h2 class="reveal">Una última sorpresa</h2>
+  <button class="reveal" id="btnSorpresa">Ábrela 🎁</button>
+  <div id="final">
+    <p id="pregunta"></p>
+    <div class="botones">
+      <button id="si">¡Sí! 💍</button>
+      <button id="no">No</button>
+    </div>
+    <div id="respuesta"></div>
+  </div>
+</section>
+
+<footer>Hecho con ♥ solo para ti</footer>
+
+<script>
+/* ================================================
+   ✏️  PERSONALIZA AQUÍ  ✏️
+   Cambia todos los textos por los tuyos
+================================================ */
+const CONFIG = {
+  ella: "Mi princesa",                       // su nombre o apodo
+  tu: "Josue",                       // tu nombre
+  fechaInicio: "2020-10-30T00:00:00",    // fecha en que empezaron (AAAA-MM-DD)
+  subtitulo: "30 de octubre · Seis años de amor, risas y experiencias",
+  musicaUrl: "cancion.mp4",                         // opcional: enlace/archivo .mp3 (ej: "cancion.mp3")
+
+  historia: [
+    { titulo: "Año 1 · Cuando todo comenzó", texto: "Aún recuerdo la primera vez que conversamos, puede que tenga mala memoria, pero las cosas relacionadas a tí nunca podría olvidarlas. Sin duda fue un comienzo algo peculiar... Pero no me arrepiento de haberte conocido en aquel entonces, soy muy afortunado desde ese encuentro." },
+    { titulo: "Año 2 · Nos fuimos conociendo", texto: "Cada momento, acercamiento y tiempo que pasamos juntos aún sin estar, fue precioso. Valoro cada uno de esos recuerdos tontos, frustraciones y risas que tuvimos mientras jugabamos, ya que gracias a eso nos acercamos cada vez más de una manera distinta a lo que originalmente debio ser." },
+    { titulo: "Año 3 · Creciendo juntos", texto: "Puede que pasamos mucho tiempo sin desarrollar mucho las cosas, pero estos últimos años han sido los mejores, el poder disfrutar más de mi tiempo contigo, la persona que más amo a veces me hace darme cuenta de cúan tonto fui y soy, pero pudimos superarlo, pese a que fue tardío, avanzamos a nuestro propio ritmo." },
+    { titulo: "Año 4 · Superando todo", texto: "Los conflictos suelen existir, no creo que sea algo malo porque no existe tal cosa como una relación perfecta, ¿Quizás hay más desde que conocemos más del otro? No sé como expresarlo adecuadamente con palabras, ¡Pero lo que quiero decir! Es que aunque discutamos, tengamos problemas siempre podemos hablarlo y superarlo. Sé que es un poco complicado por la situación y emociones, pero ¡Siempre estaré ahí para tí!" },
+    { titulo: "Año 5 · Más unidos que nunca", texto: "Siento que cada vez que salimos y nos encontramos son los momentos más importantes de mi vida, quiero decir cada día que paso a tu lado ocupa un espacio importante en mi. Pero, cuando estamos juntos frente a frente es una sensación que quisiera que durase para siempre y así mismo espero que el tiempo para no seprarnos no sea tan largo como lo aparenta.." },
+    { titulo: "Año 6 · Hoy", texto: "Y aquí seguimos, eligiéndonos cada día. Tenemos nuestras propias circunstancias, errores y problemas, pero sobre todo eso nos seguimos amando y tratando de mejorar mutuamente. Es lo que mas agradezco, porque asi construiremos nuestro futuro." }
+  ],
+
+  razones: [
+    "Tu sonrisa ilumina hasta mis días más grises.",
+    "Siempre sabes cómo hacerme feliz.",
+    "Eres la mejor persona y mi lugar seguro.",
+    "Me haces querer ser una mejor persona.",
+    "Contigo hasta lo simple se vuelve especial.",
+    "Porque eres tú, y siempre serás tú."
+  ],
+
+  carta: `Mi amor,
+
+Hoy se cumplen seis años desde que mi vida cambió para bien. Seis años de palabras, de risas, de días buenos y de otros no tanto, pero siempre juntos.
+
+Ese año donde nos vimos, comprendí que fuí la persona mas afortunada. Estaba muy nervioso en aquel entonces y lo sigo estando cada vez que nos vemos, es algo que no podré evitar.
+
+Te amo tanto que espero poder demostrarlo cada día y que nunca dudes de ello. Eres la persona más especial e importante para mí. Cada cosa que digas o hagas siempre influirá en mí para bien.
+
+Gracias por quedarte, por cuidarme, por entenderme, por todo incluso cuando ni yo mismo me entiendo. Contigo aprendí que el amor no es perfecto, es elegirse y aceptarse todos los días.
+
+Quiero seguir construyendo lo nuestro contigo todos los años que vengan, y los que no tengan número.
+
+Te amo hoy, mañana y siempre con todo mi ser.`,
+
+  pregunta: "¿Te animas a seguir escribiendo esta historia conmigo? 💞",
+  respuestaFinal: "¡Lo sabía! Te amo infinitamente 💖"
+};
+/* ================================================ */
+
+// ---------- Textos ----------
+document.getElementById('titulo').textContent = `Seis años contigo, ${CONFIG.ella}`;
+document.getElementById('subtitulo').textContent = CONFIG.subtitulo;
+document.getElementById('firma').textContent = `— ${CONFIG.tu} ♥`;
+document.getElementById('pregunta').textContent = CONFIG.pregunta;
+document.title = `Seis años contigo ♥`;
+
+// ---------- Contador ----------
+const inicio = new Date(CONFIG.fechaInicio);
+function actualizarContador(){
+  const ahora = new Date();
+  let y = ahora.getFullYear() - inicio.getFullYear();
+  let m = ahora.getMonth() - inicio.getMonth();
+  let d = ahora.getDate() - inicio.getDate();
+  if (d < 0){ m--; d += new Date(ahora.getFullYear(), ahora.getMonth(), 0).getDate(); }
+  if (m < 0){ y--; m += 12; }
+  const datos = [
+    [y,"Años"],[m,"Meses"],[d,"Días"],
+    [ahora.getHours(),"Horas"],[ahora.getMinutes(),"Minutos"],[ahora.getSeconds(),"Segundos"]
+  ];
+  document.getElementById('contador').innerHTML =
+    datos.map(([n,t]) => `<div class="caja"><b>${n}</b><span>${t}</span></div>`).join('');
+}
+actualizarContador(); setInterval(actualizarContador, 1000);
+
+// ---------- Línea de tiempo ----------
+document.getElementById('timeline').innerHTML = CONFIG.historia.map(h =>
+  `<div class="hito reveal"><h3>${h.titulo}</h3><p>${h.texto}</p></div>`).join('');
+
+// ---------- Razones (cartas que giran) ----------
+document.getElementById('razones').innerHTML = CONFIG.razones.map((r,i) =>
+  `<div class="carta reveal"><div class="carta-inner">
+     <div class="cara frente">♥ ${i+1}</div>
+     <div class="cara atras">${r}</div>
+   </div></div>`).join('');
+document.querySelectorAll('.carta').forEach(c =>
+  c.addEventListener('click', () => c.classList.toggle('volteada')));
+
+// ---------- Carta con efecto máquina de escribir ----------
+let escrito = false;
+function escribirCarta(){
+  if (escrito) return; escrito = true;
+  const el = document.getElementById('carta'); let i = 0;
+  (function tick(){
+    el.textContent = CONFIG.carta.slice(0, i++);
+    if (i <= CONFIG.carta.length) setTimeout(tick, 28);
+  })();
+}
+
+// ---------- Aparecer al hacer scroll ----------
+const obs = new IntersectionObserver(entradas => {
+  entradas.forEach(e => {
+    if (e.isIntersecting){
+      e.target.classList.add('visible');
+      if (e.target.id === 'carta') escribirCarta();
+    }
+  });
+}, { threshold: .2 });
+document.querySelectorAll('.reveal').forEach(el => obs.observe(el));
+setTimeout(() => document.querySelectorAll('#hero .reveal').forEach(e => e.classList.add('visible')), 200);
+
+// ---------- Corazones flotantes de fondo ----------
+const cv = document.getElementById('hearts'), cx = cv.getContext('2d');
+function ajustar(){ cv.width = innerWidth; cv.height = innerHeight; }
+ajustar(); addEventListener('resize', ajustar);
+const emojis = ['💗','💖','💕','🌸','✨'];
+const flotantes = Array.from({length:28}, () => nuevo(true));
+function nuevo(inicial){
+  return { x:Math.random()*innerWidth, y: inicial ? Math.random()*innerHeight : innerHeight+30,
+    s:14+Math.random()*26, v:.4+Math.random()*1, o:.25+Math.random()*.5,
+    e:emojis[Math.floor(Math.random()*emojis.length)], f:Math.random()*Math.PI*2 };
+}
+(function animar(){
+  cx.clearRect(0,0,cv.width,cv.height);
+  flotantes.forEach((h,i) => {
+    h.y -= h.v; h.f += .02; h.x += Math.sin(h.f)*.5;
+    cx.globalAlpha = h.o; cx.font = h.s+'px serif'; cx.fillText(h.e, h.x, h.y);
+    if (h.y < -40) flotantes[i] = nuevo(false);
+  });
+  requestAnimationFrame(animar);
+})();
+
+// ---------- Confeti ----------
+function confeti(){
+  const c = document.createElement('canvas');
+  Object.assign(c.style,{position:'fixed',inset:0,zIndex:10,pointerEvents:'none'});
+  c.width = innerWidth; c.height = innerHeight; document.body.appendChild(c);
+  const g = c.getContext('2d'), icos = ['💖','💕','🎉','✨','🌸','❤️'];
+  const ps = Array.from({length:130}, () => ({
+    x:innerWidth/2, y:innerHeight/2, vx:(Math.random()-.5)*18, vy:-Math.random()*16-4,
+    s:18+Math.random()*20, e:icos[Math.floor(Math.random()*icos.length)]
+  }));
+  let t = 0;
+  (function f(){
+    g.clearRect(0,0,c.width,c.height);
+    ps.forEach(p => { p.x+=p.vx; p.y+=p.vy; p.vy+=.35; g.font=p.s+'px serif'; g.fillText(p.e,p.x,p.y); });
+    if (++t < 200) requestAnimationFrame(f); else c.remove();
+  })();
+}
+
+// ---------- Sorpresa final ----------
+document.getElementById('btnSorpresa').addEventListener('click', e => {
+  e.target.style.display = 'none';
+  document.getElementById('final').style.display = 'block';
+  confeti();
+});
+document.getElementById('si').addEventListener('click', () => {
+  const r = document.getElementById('respuesta');
+  r.textContent = CONFIG.respuestaFinal; r.style.display = 'block';
+  document.querySelector('.botones').style.display = 'none';
+  confeti(); setTimeout(confeti, 700); setTimeout(confeti, 1400);
+});
+// El botón "No" huye 😏
+const no = document.getElementById('no');
+function huir(){
+  no.style.position = 'absolute';
+  no.style.left = Math.random()*(innerWidth-120)*0.6 + 'px';
+  no.style.top  = (Math.random()*120-30) + 'px';
+}
+no.addEventListener('mouseenter', huir);
+no.addEventListener('touchstart', e => { e.preventDefault(); huir(); });
+
+// ---------- Música opcional ----------
+if (CONFIG.musicaUrl){
+  const audio = new Audio(CONFIG.musicaUrl); audio.loop = true;
+  const b = document.getElementById('musica'); b.style.display = 'block';
+  b.addEventListener('click', () => {
+    if (audio.paused){ audio.play(); b.textContent = '⏸️'; } else { audio.pause(); b.textContent = '🎵'; }
+  });
+}
+</script>
+</body>
+</html>
